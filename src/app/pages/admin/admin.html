@@ -1,0 +1,101 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <h1>Painel Administrativo - Outdoor</h1>
+    <button (click)="logout()" class="btn-logout">Sair</button>
+  </header>
+
+  <div class="admin-content">
+    <div class="stats">
+      <div class="stat-card">
+        <h3>Total de Outdoors</h3>
+        <p class="stat-number">{{ outdoors.length }}</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button (click)="showForm = !showForm" class="btn-primary">
+        {{ showForm ? 'Cancelar' : 'Criar Novo Outdoor' }}
+      </button>
+    </div>
+
+    <!-- Formulário de Criação -->
+    <div *ngIf="showForm" class="form-container">
+      <h3>Criar Novo Outdoor</h3>
+      <form (ngSubmit)="criarOutdoor()" #outdoorForm="ngForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cliente:</label>
+            <input [(ngModel)]="cliente" name="cliente" required class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Tamanho:</label>
+            <select [(ngModel)]="tamanho" name="tamanho" class="form-control">
+              <option value="9x3m">9x3m</option>
+              <option value="6x3m">6x3m</option>
+              <option value="12x3m">12x3m</option>
+              <option value="15x5m">15x5m</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo:</label>
+            <select [(ngModel)]="tipo" name="tipo" class="form-control">
+              <option value="Digital">Digital</option>
+              <option value="Impresso">Impresso</option>
+              <option value="LED">LED</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Localização:</label>
+            <input [(ngModel)]="localizacao" name="localizacao" required class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Valor (R$):</label>
+          <input type="number" [(ngModel)]="valor" name="valor" required class="form-control">
+        </div>
+
+        <button type="submit" [disabled]="!outdoorForm.form.valid" class="btn-success">
+          Criar Outdoor
+        </button>
+      </form>
+    </div>
+
+    <!-- Lista de Outdoors -->
+    <div class="outdoors-list">
+      <h3>Outdoors Cadastrados</h3>
+      <div *ngFor="let outdoor of outdoors" class="outdoor-card">
+        <div class="outdoor-info">
+          <h4>{{ outdoor.cliente }}</h4>
+          <p><strong>Tamanho:</strong> {{ outdoor.tamanho }}</p>
+          <p><strong>Tipo:</strong> {{ outdoor.tipo }}</p>
+          <p><strong>Local:</strong> {{ outdoor.localizacao }}</p>
+          <p><strong>Valor:</strong> R$ {{ outdoor.valor }}</p>
+          <p><strong>Status:</strong> 
+            <span [class]="'status-' + outdoor.status">{{ outdoor.status }}</span>
+          </p>
+        </div>
+        
+        <div class="outdoor-actions">
+          <select (change)="atualizarStatus(outdoor.id, $event.target.value)" 
+                  [value]="outdoor.status" class="status-select">
+            <option value="planejado">Planejado</option>
+            <option value="em_producao">Em Produção</option>
+            <option value="producao_concluida">Produção Concluída</option>
+            <option value="em_instalacao">Em Instalação</option>
+            <option value="ativo">Ativo</option>
+            <option value="manutencao">Manutenção</option>
+            <option value="inativo">Inativo</option>
+          </select>
+          
+          <button (click)="excluirOutdoor(outdoor.id)" class="btn-danger">
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
